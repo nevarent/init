@@ -1,90 +1,36 @@
-#include <sys/types.h>
-#include <sys/wait.h>
-
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
-#define LEN(x)	(sizeof (x) / sizeof *(x))
-#define TIMEO	30
 
-static void sigpoweroff(void);
-static void sigreap(void);
-static void sigreboot(void);
-static void spawn(char *const []);
-
-static struct {
-	int sig;
-	void (*handler)(void);
-} sigmap[] = {
-	{ SIGUSR1, sigpoweroff },
-	{ SIGCHLD, sigreap     },
-	{ SIGALRM, sigreap     },
-	{ SIGINT,  sigreboot   },
-};
-
-#include "config.h"
-
-static sigset_t set;
-
-int
-main(void)
+        /* kill zombie processes */
+void killZombies(int sig)                               // added int sig to shut the compiler up 
 {
-	int sig;
-	size_t i;
-
-	if (getpid() != 1)
-		return 1;
-	chdir("/");
-	sigfillset(&set);
-	sigprocmask(SIG_BLOCK, &set, NULL);
-	spawn(rcinitcmd);
-	while (1) {
-		alarm(TIMEO);
-		sigwait(&set, &sig);
-		for (i = 0; i < LEN(sigmap); i++) {
-			if (sigmap[i].sig == sig) {
-				sigmap[i].handler();
-				break;
-			}
-		}
-	}
-	/* not reachable */
-	return 0;
+        while (waitpid(-1, NULL, WNOHANG) > 0);
 }
 
-static void
-sigpoweroff(void)
-{
-	spawn(rcpoweroffcmd);
-}
 
-static void
-sigreap(void)
+int main()
 {
-	while (waitpid(-1, NULL, WNOHANG) > 0)
-		;
-	alarm(TIMEO);
-}
+        signal(SIGCHLD, killZombies);                   // trigger killZombies if init received SIGCHLD
 
-static void
-sigreboot(void)
-{
-	spawn(rcrebootcmd);
-}
 
-static void
-spawn(char *const argv[])
-{
-	switch (fork()) {
-	case 0:
-		sigprocmask(SIG_UNBLOCK, &set, NULL);
-		setsid();
-		execvp(argv[0], argv);
-		perror("execvp");
-		_exit(1);
-	case -1:
-		perror("fork");
-	}
+                        /* start "service" - getty */
+        pid_t servicePid = fork();
+        if (servicePid == 0)
+        {
+                execl("/usr/bin/getty", "getty", "tty1", NULL);
+        }
+
+                        /* main loop - sleeper */
+        while (1)
+        {
+                pause();                                // sleep until a signal received
+        }
+
+
+
+        return 0;                                       /* <-- unreachable | DON'T LET THIS HAPPEN */ 
 }
