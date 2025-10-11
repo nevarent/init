@@ -1,40 +1,36 @@
-// NOT USED YET
-
 // POWER MANAGEMENT: POWEROFF, HALT, REBOOT...
 #include "power.h"
+#include <stdio.h>
+#include <sys/reboot.h>
+#include <unistd.h>
 
-int initReboot(void)
+
+void initReboot(int sig)
 {
-        sync();                                         // sync filesystems
-        int result = reboot(LINUX_REBOOT_CMD_RESTART);   // the restart syscall
-        if (result == -1)                               // if failed... 
+	sync();						// sync filesystems
+	int result = reboot(RB_AUTOBOOT);		// the restart syscall
+        if (result == -1)				// if failed... 
         { 
                 fprintf(stderr, "Reboot (REBOOT) failed\n"); 
         } 
-
-        return result;
 }
 
-int initPoweroff(void)
+void initPoweroff(int sig)
 {
-        sync();                                          // sync
-        int result = reboot(LINUX_REBOOT_CMD_POWER_OFF); // poweroff 
+	sync();						 // sync
+	int result = reboot(RB_POWER_OFF);		 // poweroff 
         if (result == -1) 
         { 
                 fprintf(stderr, "Reboot (POWEROFF) failed\n"); 
         } 
-
-        return result;
 }
 
-int initHalt(void)
+void initHalt(int sig)
 {
-        sync();                                         // sync
-        int result = reboot(LINUX_REBOOT_CMD_HALT);     // halt
-        if (result == -1)
-        {
-                fprintf(stderr, "Reboot (HALT) failed\n");
-        }
-
-        return result;
+	sync();						// sync
+	int result = reboot(RB_HALT_SYSTEM);		// halt
+	if (result == -1)
+	{
+		fprintf(stderr, "Reboot (HALT) failed\n");
+	}
 }
