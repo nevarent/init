@@ -6,7 +6,7 @@
 int initReboot(void)
 {
         sync();                                         // sync filesystems
-        int result = reboot(LINUX_REBOOT_CMD_RESTART);   // the reboot syscall
+        int result = reboot(LINUX_REBOOT_CMD_RESTART);   // the restart syscall
         if (result == -1)                               // if failed... 
         { 
                 fprintf(stderr, "Reboot (REBOOT) failed\n"); 
