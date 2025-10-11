@@ -7,4 +7,6 @@
 
 Компилировать? (сейчас не нужно и бесполезно - всё равно инит ещё не рабочий.)
 - компилятор TCC/GCC
-- tcc -o init init.c / gcc -o init init.c
+
+        tcc -o init init.c
+        gcc -o init init.c
