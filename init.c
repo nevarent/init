@@ -19,7 +19,11 @@ int main()
 
                         /* start "service" - getty */
         pid_t servicePid = fork();
-        if (servicePid == 0)
+        if (servicePid < 0)
+        {
+                fprintf(stderr, "Fork failed!!!");
+        }
+        else if (servicePid == 0)
         {
                 execl("/usr/bin/getty", "getty", "tty1", NULL);
         }
