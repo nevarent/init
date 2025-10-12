@@ -13,6 +13,6 @@
 ### Но если сильно захотелось:
 1. Linux, компилятор TCC/GCC:
 
-        ```tcc -o init power.c init.c```
-        ```gcc -o init power.c init.c```
+           tcc -o init power.c init.c
+           gcc -o init power.c init.c
 2. Скопировать результат (init) в директорию ```/sbin```.
