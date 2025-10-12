@@ -1,3 +1,11 @@
 /* NOT USED IN INIT.C YET */
-char rcfile[] = "/etc/rc.local";
-char conf[] = "/etc/rc.conf";
+#ifndef CONFIG_H
+#define CONFIG_H
+
+char* rcfile = "/etc/rc.local";
+char* conf = "/etc/rc.conf";
+
+void config_load();
+void config_checkExist();
+
+#endif

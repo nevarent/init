@@ -5,10 +5,10 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include "power.h"
-
+#include "logger.h"
 
 	/* kill zombie processes */
-void killZombies(int sig)				// added int sig to shut the compiler up 
+void killZombies(int sig)				// added int sig to shut the compiler up
 {
 	while (waitpid(-1, NULL, WNOHANG) > 0);
 }
@@ -16,6 +16,7 @@ void killZombies(int sig)				// added int sig to shut the compiler up
 
 int main()
 {
+    logger_sync();
 	signal(SIGCHLD, killZombies);			// trigger killZombies if init received SIGCHLD
 	signal(SIGTERM, initPoweroff);			// poweroff if init received SIGTERM
 							// TODO: reboot & halt
@@ -42,5 +43,5 @@ int main()
 
 
 
-	return 0;					/* <-- unreachable, not happening */ 
+	return 0;					/* <-- unreachable, not happening */
 }
