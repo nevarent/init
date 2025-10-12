@@ -18,7 +18,8 @@ int main()
 {
 	signal(SIGCHLD, killZombies);			// trigger killZombies if init received SIGCHLD
 	signal(SIGTERM, initPoweroff);			// poweroff if init received SIGTERM
-							// TODO: reboot & halt
+	signal(SIGINT, initReboot);
+	signal(SIGHUP, initHalt);
 
 
 			/* start agetty */
