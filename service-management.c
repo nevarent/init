@@ -1,7 +1,3 @@
-// NOT INCLUDED IN init.c YET
-// REQUIRES CODE MODIFICATIONS (change main() name and other minor stuff)
-// TODO: MAKE HEADER FILE AND MAKE USE OF config.h
-
 // parse and execute services
 #include <stdio.h>
 #include <string.h>
@@ -9,22 +5,21 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 
-//#include "config.h"
+#include "config.h"			// imports rcFile, SERVICE_MAX_ARGS and SERVICE_MAX_BUFFER
+#include "service-management.h"
 
-#define MAX_ARGS 64
-#define MAX_BUFFER 256
 
-int main()
+void startServices()
 {
 	FILE *serviceFile;
-	char lineBuffer[MAX_BUFFER];
+	char lineBuffer[SERVICE_MAX_BUFFER];
 
-	//serviceFile = fopen(*fileLocation, "r");
-	serviceFile = fopen("/etc/rc.local", "r");
+	serviceFile = fopen(rcFile, "r");
+	//serviceFile = fopen("/etc/rc.local", "r");
 	if (serviceFile == NULL)
 	{
 		fprintf(stderr, "Unable to read services file (/etc/rc.local). Does it exist?\n");
-		return 1;
+		return;
 	}
 
 
@@ -73,12 +68,12 @@ int main()
 			// in child
 		else if (servicePid == 0)
 		{
-			char *args[MAX_ARGS];
+			char *args[SERVICE_MAX_ARGS];
 			int argCount = 0;
 
 				// tokenizer, parse entire string into arguments
 			char *token = strtok(command, " ");
-			while (token != NULL && argCount < MAX_ARGS-1)		// MAX_ARGS-1 cause null terminator must fit
+			while (token != NULL && argCount < SERVICE_MAX_ARGS-1)		// MAX_ARGS-1 cause null terminator must fit
 			{
 				args[argCount++] = token;
 				token = strtok(NULL, " ");	// reminder for me: NULL is required to continue
@@ -105,10 +100,10 @@ int main()
 		}
 
 
-			// small delay
+			// small 10 ms delay
 		usleep(10000);
 	}
 
+		// close file
 	fclose(serviceFile);
-	return 0;
 }

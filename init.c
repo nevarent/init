@@ -4,7 +4,10 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
+
 #include "power.h"
+#include "service-management.h"
+//#include "config.h"
 
 
 	/* kill zombie processes */
@@ -24,16 +27,9 @@ int main()
 
 			/* start agetty */
 		/* here should be the future service management stuff */
-	printf("Starting agetty service\n");
-	pid_t servicePid = fork();
-	if (servicePid < 0)
-        {
-                fprintf(stderr, "Fork failed!!!\n");
-        }
-	else if (servicePid == 0)
-	{
-		execl("/usr/bin/agetty", "agetty", "tty1", NULL);	// i don't know how agetty works, later
-	}
+	printf("[init] Starting services\n");
+
+	startServices();
 
 			/* main loop - sleeper */
 	while (1)

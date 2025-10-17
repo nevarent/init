@@ -5,7 +5,6 @@
 #include <unistd.h>
 #include <sys/reboot.h>
 
-// these return 0 on success and -1 on error
 void initReboot(int sig);
 void initPoweroff(int sig);
 void initHalt(int sig);
