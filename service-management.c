@@ -73,7 +73,8 @@ void startServices()
 
 				// tokenizer, parse entire string into arguments
 			char *token = strtok(command, " ");
-			while (token != NULL && argCount < SERVICE_MAX_ARGS-1)		// MAX_ARGS-1 cause null terminator must fit
+			while (token != NULL && argCount < SERVICE_MAX_ARGS-1)		// SERVICE_MAX_ARGS-1 cause null
+											// terminator must fit
 			{
 				args[argCount++] = token;
 				token = strtok(NULL, " ");	// reminder for me: NULL is required to continue

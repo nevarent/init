@@ -24,9 +24,7 @@ int main()
 	signal(SIGINT, initReboot);
 	signal(SIGHUP, initHalt);
 
-
-			/* start agetty */
-		/* here should be the future service management stuff */
+			/* start services */
 	printf("[init] Starting services\n");
 
 	startServices();
